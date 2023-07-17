@@ -7,8 +7,6 @@ Some applications (e.g. GUI apps) only work on the active [Windows desktop](http
 The usage is simple:
 
 ```rust
-use windows_nondefault_desktop;
-
 fn main() {
     windows_nondefault_desktop::assume_active_desktop();
     // The application is assumed to be running on the active desktop
