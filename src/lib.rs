@@ -11,8 +11,8 @@ use windows_sys::Win32::System::{
         GetThreadDesktop, GetUserObjectInformationA, OpenInputDesktop, HDESK, UOI_NAME,
     },
     Threading::{
-        CreateProcessA, GetCurrentThreadId, WaitForSingleObject, INFINITE, PROCESS_INFORMATION,
-        STARTUPINFOA,
+        CreateProcessA, GetCurrentThreadId, GetExitCodeProcess, WaitForSingleObject, INFINITE,
+        PROCESS_INFORMATION, STARTUPINFOA,
     },
 };
 
@@ -59,10 +59,12 @@ pub fn assume_active_desktop() {
 
     let exitcode = if ret != 0 {
         // process creation succeeded
+        let mut exitcode = 0;
         unsafe {
             WaitForSingleObject(pi.hProcess, INFINITE);
+            GetExitCodeProcess(pi.hProcess, &mut exitcode);
         }
-        0
+        exitcode as _
     } else {
         // process creation failed
         1
